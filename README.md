@@ -1,11 +1,11 @@
 # Project 2: CIFAR-10 Classification and Batch Normalization
 
-本仓库包含课程 Project 2 的 PyTorch 代码。代码用于完成两个任务：
+本仓库包含Project 2 的 PyTorch 代码。代码用于完成两个任务：
 
 1. 在 CIFAR-10 上训练和比较多个分类网络。
 2. 比较 VGG-A 与 VGG-A+BatchNorm，并绘制 loss landscape 和梯度统计图。
 
-数据集、训练结果和模型权重不会随代码上传到 GitHub。运行脚本时，CIFAR-10 会由 `torchvision` 自动下载到 `data/`，训练输出会保存到 `reports/`。
+运行脚本时，CIFAR-10 会由 `torchvision` 自动下载到 `data/`，训练输出会保存到 `reports/`。
 
 ## 目录结构
 
@@ -39,47 +39,9 @@
 - `utils/losses.py`：包含交叉熵、label smoothing 和 focal loss。
 - `utils/nn.py`：包含设备选择、随机种子、准确率、保存 checkpoint 等工具函数。
 
-## 环境配置
-
-建议使用 Python 3.9 到 3.11。先创建并激活虚拟环境，然后安装依赖：
-
-```bash
-pip install -r requirements.txt
-```
-
-如果使用 NVIDIA GPU，PyTorch 会使用 CUDA。  
-如果使用 Apple Silicon 机器，并且 `torch.backends.mps.is_available()` 为 `True`，代码可以使用 MPS。
-
-检查 PyTorch 设备：
-
-```bash
-python -c "import torch; print(torch.cuda.is_available()); print(torch.backends.mps.is_available())"
-```
-
-## 快速测试
-
-正式训练前建议先用小数据集测试代码流程：
-
-```bash
-python train_cifar.py --epochs 1 --n-train 1024 --n-test 256 --workers 0
-python VGG_Loss_Landscape.py --epochs 1 --n-train 1024 --n-test 256 --workers 0
-```
-
-如果使用 Apple Silicon GPU，可以显式指定：
-
-```bash
-python train_cifar.py --epochs 1 --n-train 1024 --n-test 256 --workers 0 --device mps
-```
-
-如果使用 NVIDIA GPU，可以显式指定：
-
-```bash
-python train_cifar.py --epochs 1 --n-train 1024 --n-test 256 --workers 2 --device cuda
-```
-
 ## 训练单个模型
 
-训练默认的 CIFARConvNet：
+CIFARConvNet：
 
 ```bash
 python train_cifar.py --model cifar_conv --epochs 20 --optimizer adamw --loss cross_entropy --augment
@@ -214,29 +176,8 @@ reports/visualizations/
 
 ## 本次实验结果摘要
 
-在本地实验中，主分类实验的最优模型为 `cifar_conv` 配合 Adam 优化器，测试准确率为 `90.83%`，测试错误率为 `9.17%`。
+主分类实验的最优模型为 `cifar_conv` 配合 Adam 优化器，测试准确率为 `90.83%`，测试错误率为 `9.17%`。
 
 BatchNorm 对比实验中，VGG-A+BN 在学习率 `0.002` 下取得最佳测试准确率 `83.19%`；无 BatchNorm 的 VGG-A 最佳测试准确率为 `78.38%`。
 
 这些数值依赖随机种子、硬件、PyTorch 版本和训练配置。重新运行时可能存在小幅差异。
-
-## 不应上传到 GitHub 的文件
-
-以下文件或目录由 `.gitignore` 排除：
-
-- `data/cifar-10-batches-py/`
-- `data/cifar-10-python.tar.gz`
-- `reports/`
-- `*.pt`
-- `*.pth`
-- `__pycache__/`
-- `.DS_Store`
-
-如果课程提交要求提供模型权重，需要将权重上传到 Google Drive、OneDrive、百度网盘或其他网盘，并在报告中提供下载链接。
-
-## 参考资料
-
-- CIFAR-10: <https://www.cs.toronto.edu/~kriz/cifar.html>
-- PyTorch CIFAR-10 tutorial: <https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html>
-- Batch Normalization paper: <https://arxiv.org/abs/1502.03167>
-- How Does Batch Normalization Help Optimization?: <https://arxiv.org/abs/1805.11604>
